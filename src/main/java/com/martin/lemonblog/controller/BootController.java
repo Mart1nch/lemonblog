@@ -21,4 +21,17 @@ public class BootController {
     public String demo() {
         return "demo";
     }
+
+    @RequestMapping("/index")
+    public String index() {
+        return "index";
+    }
+    @RequestMapping("/article")
+    public String article() {
+        return "article";
+    }
+    @RequestMapping("/write")
+    public String write() {
+        return "write";
+    }
 }

@@ -1,0 +1,31 @@
+
+
+/*  */
+.container {
+  max-width: 1380px;
+}
+
+/* 整个html页面的字体大小 */
+/* html {
+  
+  font-family: 'Ubuntu', 'Roboto', 'Open Sans', 'Microsoft YaHei', 'sans-serif';
+}
+ */
+body {
+  font-size: 14px;
+  font-family: 'Ubuntu', 'Roboto', 'Open Sans', 'Microsoft YaHei', 'sans-serif';
+}
+
+
+
+
+/* 4a4a4a 浅一些
+    #363636 深一点小标题
+ */
+
+/* 屏幕大于768px则字体放大到16px */
+/* @media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+} */
