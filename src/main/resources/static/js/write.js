@@ -5,11 +5,7 @@ $(function() {
     width: "100%",
     height: 640,
     syncScrolling: "single",
-    path: "editormd/lib/",
-    // 启动本地图片自动上传功能
-    imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-    imageUploadURL: "/xxx",
-    
+    path: "../plugins/editormd/lib/"
   });
 
   /*

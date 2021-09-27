@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.martin.lemonblog.mapper.ArticleMapper">
+
+    <resultMap type="com.martin.lemonblog.entity.Article" id="ArticleMap">
+        <result property="articleId" column="article_id" jdbcType="INTEGER"/>
+        <result property="articleTitle" column="article_title" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="modifyDate" column="modify_date" jdbcType="TIMESTAMP"/>
+        <result property="articleAddress" column="article_address" jdbcType="VARCHAR"/>
+        <result property="likeNum" column="like_num" jdbcType="INTEGER"/>
+        <result property="commentNum" column="comment_num" jdbcType="INTEGER"/>
+        <result property="lookNum" column="look_num" jdbcType="INTEGER"/>
+        <result property="categoryId" column="category_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ArticleMap">
+        select
+          article_id, article_title, user_id, modify_date, article_address, like_num, comment_num, look_num, category_id
+        from article
+        where article_id = #{articleId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ArticleMap">
+        select
+          article_id, article_title, user_id, modify_date, article_address, like_num, comment_num, look_num, category_id
+        from article
+        <where>
+            <if test="articleId != null">
+                and article_id = #{articleId}
+            </if>
+            <if test="articleTitle != null and articleTitle != ''">
+                and article_title = #{articleTitle}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="modifyDate != null">
+                and modify_date = #{modifyDate}
+            </if>
+            <if test="articleAddress != null and articleAddress != ''">
+                and article_address = #{articleAddress}
+            </if>
+            <if test="likeNum != null">
+                and like_num = #{likeNum}
+            </if>
+            <if test="commentNum != null">
+                and comment_num = #{commentNum}
+            </if>
+            <if test="lookNum != null">
+                and look_num = #{lookNum}
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from article
+        <where>
+            <if test="articleId != null">
+                and article_id = #{articleId}
+            </if>
+            <if test="articleTitle != null and articleTitle != ''">
+                and article_title = #{articleTitle}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="modifyDate != null">
+                and modify_date = #{modifyDate}
+            </if>
+            <if test="articleAddress != null and articleAddress != ''">
+                and article_address = #{articleAddress}
+            </if>
+            <if test="likeNum != null">
+                and like_num = #{likeNum}
+            </if>
+            <if test="commentNum != null">
+                and comment_num = #{commentNum}
+            </if>
+            <if test="lookNum != null">
+                and look_num = #{lookNum}
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="articleId" useGeneratedKeys="true">
+        insert into article(article_title, user_id, modify_date, article_address, like_num, comment_num, look_num, category_id)
+        values (#{articleTitle}, #{userId}, #{modifyDate}, #{articleAddress}, #{likeNum}, #{commentNum}, #{lookNum}, #{categoryId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="articleId" useGeneratedKeys="true">
+        insert into article(article_title, user_id, modify_date, article_address, like_num, comment_num, look_num, category_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.articleTitle}, #{entity.userId}, #{entity.modifyDate}, #{entity.articleAddress}, #{entity.likeNum}, #{entity.commentNum}, #{entity.lookNum}, #{entity.categoryId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="articleId" useGeneratedKeys="true">
+        insert into article(article_title, user_id, modify_date, article_address, like_num, comment_num, look_num, category_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.articleTitle}, #{entity.userId}, #{entity.modifyDate}, #{entity.articleAddress}, #{entity.likeNum}, #{entity.commentNum}, #{entity.lookNum}, #{entity.categoryId})
+        </foreach>
+        on duplicate key update
+        article_title = values(article_title),
+        user_id = values(user_id),
+        modify_date = values(modify_date),
+        article_address = values(article_address),
+        like_num = values(like_num),
+        comment_num = values(comment_num),
+        look_num = values(look_num),
+        category_id = values(category_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update article
+        <set>
+            <if test="articleTitle != null and articleTitle != ''">
+                article_title = #{articleTitle},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="modifyDate != null">
+                modify_date = #{modifyDate},
+            </if>
+            <if test="articleAddress != null and articleAddress != ''">
+                article_address = #{articleAddress},
+            </if>
+            <if test="likeNum != null">
+                like_num = #{likeNum},
+            </if>
+            <if test="commentNum != null">
+                comment_num = #{commentNum},
+            </if>
+            <if test="lookNum != null">
+                look_num = #{lookNum},
+            </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId},
+            </if>
+        </set>
+        where article_id = #{articleId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from article where article_id = #{articleId}
+    </delete>
+
+</mapper>
+

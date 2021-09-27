@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.martin.lemonblog.mapper.ResourceRoleMapper">
+
+    <resultMap type="com.martin.lemonblog.entity.ResourceRole" id="ResourceRoleMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="resourceId" column="resource_id" jdbcType="INTEGER"/>
+        <result property="resourceUrl" column="resource_url" jdbcType="VARCHAR"/>
+        <result property="resourceType" column="resource_type" jdbcType="VARCHAR"/>
+        <result property="roleId" column="role_id" jdbcType="INTEGER"/>
+        <result property="text1" column="text1" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ResourceRoleMap">
+        select
+          id, resource_id, resource_url, resource_type, role_id, text1
+        from resource_role
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ResourceRoleMap">
+        select
+          id, resource_id, resource_url, resource_type, role_id, text1
+        from resource_role
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="resourceId != null">
+                and resource_id = #{resourceId}
+            </if>
+            <if test="resourceUrl != null and resourceUrl != ''">
+                and resource_url = #{resourceUrl}
+            </if>
+            <if test="resourceType != null and resourceType != ''">
+                and resource_type = #{resourceType}
+            </if>
+            <if test="roleId != null">
+                and role_id = #{roleId}
+            </if>
+            <if test="text1 != null and text1 != ''">
+                and text1 = #{text1}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from resource_role
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="resourceId != null">
+                and resource_id = #{resourceId}
+            </if>
+            <if test="resourceUrl != null and resourceUrl != ''">
+                and resource_url = #{resourceUrl}
+            </if>
+            <if test="resourceType != null and resourceType != ''">
+                and resource_type = #{resourceType}
+            </if>
+            <if test="roleId != null">
+                and role_id = #{roleId}
+            </if>
+            <if test="text1 != null and text1 != ''">
+                and text1 = #{text1}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into resource_role(resource_id, resource_url, resource_type, role_id, text1)
+        values (#{resourceId}, #{resourceUrl}, #{resourceType}, #{roleId}, #{text1})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into resource_role(resource_id, resource_url, resource_type, role_id, text1)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.resourceId}, #{entity.resourceUrl}, #{entity.resourceType}, #{entity.roleId}, #{entity.text1})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into resource_role(resource_id, resource_url, resource_type, role_id, text1)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.resourceId}, #{entity.resourceUrl}, #{entity.resourceType}, #{entity.roleId}, #{entity.text1})
+        </foreach>
+        on duplicate key update
+        resource_id = values(resource_id),
+        resource_url = values(resource_url),
+        resource_type = values(resource_type),
+        role_id = values(role_id),
+        text1 = values(text1)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update resource_role
+        <set>
+            <if test="resourceId != null">
+                resource_id = #{resourceId},
+            </if>
+            <if test="resourceUrl != null and resourceUrl != ''">
+                resource_url = #{resourceUrl},
+            </if>
+            <if test="resourceType != null and resourceType != ''">
+                resource_type = #{resourceType},
+            </if>
+            <if test="roleId != null">
+                role_id = #{roleId},
+            </if>
+            <if test="text1 != null and text1 != ''">
+                text1 = #{text1},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from resource_role where id = #{id}
+    </delete>
+
+</mapper>
+

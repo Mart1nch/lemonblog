@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.martin.lemonblog.mapper.CommentMapper">
+
+    <resultMap type="com.martin.lemonblog.entity.Comment" id="CommentMap">
+        <result property="commentId" column="comment_id" jdbcType="INTEGER"/>
+        <result property="commentDate" column="comment_date" jdbcType="TIMESTAMP"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="detail" column="detail" jdbcType="VARCHAR"/>
+        <result property="articleId" column="article_id" jdbcType="INTEGER"/>
+        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+        <result property="likeNum" column="like_num" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="CommentMap">
+        select
+          comment_id, comment_date, user_id, detail, article_id, parent_id, like_num
+        from comment
+        where comment_id = #{commentId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="CommentMap">
+        select
+          comment_id, comment_date, user_id, detail, article_id, parent_id, like_num
+        from comment
+        <where>
+            <if test="commentId != null">
+                and comment_id = #{commentId}
+            </if>
+            <if test="commentDate != null">
+                and comment_date = #{commentDate}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="detail != null and detail != ''">
+                and detail = #{detail}
+            </if>
+            <if test="articleId != null">
+                and article_id = #{articleId}
+            </if>
+            <if test="parentId != null">
+                and parent_id = #{parentId}
+            </if>
+            <if test="likeNum != null">
+                and like_num = #{likeNum}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from comment
+        <where>
+            <if test="commentId != null">
+                and comment_id = #{commentId}
+            </if>
+            <if test="commentDate != null">
+                and comment_date = #{commentDate}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="detail != null and detail != ''">
+                and detail = #{detail}
+            </if>
+            <if test="articleId != null">
+                and article_id = #{articleId}
+            </if>
+            <if test="parentId != null">
+                and parent_id = #{parentId}
+            </if>
+            <if test="likeNum != null">
+                and like_num = #{likeNum}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="commentId" useGeneratedKeys="true">
+        insert into comment(comment_date, user_id, detail, article_id, parent_id, like_num)
+        values (#{commentDate}, #{userId}, #{detail}, #{articleId}, #{parentId}, #{likeNum})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="commentId" useGeneratedKeys="true">
+        insert into comment(comment_date, user_id, detail, article_id, parent_id, like_num)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.commentDate}, #{entity.userId}, #{entity.detail}, #{entity.articleId}, #{entity.parentId}, #{entity.likeNum})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="commentId" useGeneratedKeys="true">
+        insert into comment(comment_date, user_id, detail, article_id, parent_id, like_num)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.commentDate}, #{entity.userId}, #{entity.detail}, #{entity.articleId}, #{entity.parentId}, #{entity.likeNum})
+        </foreach>
+        on duplicate key update
+        comment_date = values(comment_date),
+        user_id = values(user_id),
+        detail = values(detail),
+        article_id = values(article_id),
+        parent_id = values(parent_id),
+        like_num = values(like_num)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update comment
+        <set>
+            <if test="commentDate != null">
+                comment_date = #{commentDate},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="detail != null and detail != ''">
+                detail = #{detail},
+            </if>
+            <if test="articleId != null">
+                article_id = #{articleId},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="likeNum != null">
+                like_num = #{likeNum},
+            </if>
+        </set>
+        where comment_id = #{commentId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from comment where comment_id = #{commentId}
+    </delete>
+
+</mapper>
+

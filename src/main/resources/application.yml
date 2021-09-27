@@ -1,3 +1,23 @@
 spring:
+  # 模板引擎
   freemarker:
     suffix: .html
+
+  # 数据库
+  datasource:
+    druid:
+      ### JDBC配置
+      url: jdbc:mysql://localhost:3306/lemon?useSSL=false&serverTimezone=UTC
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+mybatis-plus:
+  # 扫描mapper文件
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  # 驼峰转换
+
+  #  sql打印输出到控制台
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

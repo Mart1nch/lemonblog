@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.martin.lemonblog.mapper.UserLoginMapper">
+
+    <resultMap type="com.martin.lemonblog.entity.UserLogin" id="UserLoginMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="salt" column="salt" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="lastLogin" column="last_login" jdbcType="INTEGER"/>
+        <result property="ipAddress" column="ip_address" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="UserLoginMap">
+        select
+          id, salt, username, password, last_login, ip_address, user_id
+        from user_login
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserLoginMap">
+        select
+          id, salt, username, password, last_login, ip_address, user_id
+        from user_login
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="salt != null and salt != ''">
+                and salt = #{salt}
+            </if>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="lastLogin != null">
+                and last_login = #{lastLogin}
+            </if>
+            <if test="ipAddress != null">
+                and ip_address = #{ipAddress}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from user_login
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="salt != null and salt != ''">
+                and salt = #{salt}
+            </if>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="lastLogin != null">
+                and last_login = #{lastLogin}
+            </if>
+            <if test="ipAddress != null">
+                and ip_address = #{ipAddress}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into user_login(salt, username, password, last_login, ip_address, user_id)
+        values (#{salt}, #{username}, #{password}, #{lastLogin}, #{ipAddress}, #{userId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into user_login(salt, username, password, last_login, ip_address, user_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.salt}, #{entity.username}, #{entity.password}, #{entity.lastLogin}, #{entity.ipAddress}, #{entity.userId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into user_login(salt, username, password, last_login, ip_address, user_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.salt}, #{entity.username}, #{entity.password}, #{entity.lastLogin}, #{entity.ipAddress}, #{entity.userId})
+        </foreach>
+        on duplicate key update
+        salt = values(salt),
+        username = values(username),
+        password = values(password),
+        last_login = values(last_login),
+        ip_address = values(ip_address),
+        user_id = values(user_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update user_login
+        <set>
+            <if test="salt != null and salt != ''">
+                salt = #{salt},
+            </if>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="lastLogin != null">
+                last_login = #{lastLogin},
+            </if>
+            <if test="ipAddress != null">
+                ip_address = #{ipAddress},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from user_login where id = #{id}
+    </delete>
+
+</mapper>
+
